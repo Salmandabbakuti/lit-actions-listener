@@ -72,7 +72,7 @@ yarn dev
 
 #### Demo
 
-![Screenshot1](https://gitlab.com/salmandabbakuti/lit-actions/-/blob/main/screenshot.png)
+![Screenshot1](screenshot.png)
 
 ### Safety
 
