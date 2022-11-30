@@ -28,7 +28,7 @@ As of now, Lit Actions are being triggered by a user. The idea is to remove this
 
 When a user registers a Lit Action, they provide the following details:
 
-a. action name (e.g. "Send 1 BTC to Alice")
+a. action name (e.g. "weather webhook action")
 
 b. action code
 
@@ -41,6 +41,9 @@ e. event details (e.g. block number, contract address, etc.)
 There wil be some validations on the action code and event details before storing the action. if they are valid, the action is stored in the database. you can find relavent code here `pages/api/graphql.js`
 
 These details are stored in database and used to trigger the action when the event occurs.
+
+**Note: User auth will also be added to this. So that logged in users can see/update/delete all their actions in place.**
+**Currently, chainId is not being specified by user(defaults to mainnet for now). It will be used in future to support multiple chains.**
 
 2. Lit Actions Event Listener listens for the event.
 
