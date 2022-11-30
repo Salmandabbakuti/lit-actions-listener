@@ -8,12 +8,13 @@ datasource db {
 }
 
 model Action {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  id             String   @id @map("_id") @db.ObjectId
   name           String
   code           String
   jsParams       Json
   authSignature  Json
   eventType      String
+  chainId        Int      @default(1)
   when           Json
   createdBy      String
   lastExecutedAt DateTime @updatedAt

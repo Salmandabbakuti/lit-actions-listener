@@ -2,9 +2,10 @@ import { createSchema, createYoga } from 'graphql-yoga';
 import { Web3Provider, JsonRpcProvider } from "@ethersproject/providers";
 import { Contract } from "@ethersproject/contracts";
 import { LitNodeClient } from '@lit-protocol/sdk-browser';
+import { v4 as uuidv4 } from 'uuid';
 import prisma from "../../prisma";
 
-const provider = new JsonRpcProvider("https://mainnet.infura.io/v3/<apikey>"); // or Web3Provider
+const provider = new JsonRpcProvider(process.env.NEXT_PUBLIC_MAINNET_RPC_URL); // or Web3Provider;
 
 console.log("provider", provider);
 
@@ -38,6 +39,7 @@ provider.on("block", async (blockNumber) => {
   //     console.log('action run successfully:', results);
   //   }
   // }
+  // if()
 });
 
 const typeDefs = /* GraphQL */`
@@ -63,8 +65,6 @@ const typeDefs = /* GraphQL */`
     contractAddress: String
     contractABI: Json
     contractEventName: String
-    webhookUrl: String
-
   }
 
   input createActionInput {
@@ -74,6 +74,7 @@ const typeDefs = /* GraphQL */`
     jsParams: Json!
     when: createActionWhenInput!
     eventType: EventType!
+    chainId: Int
     createdBy: String!
   }
 `;
@@ -85,6 +86,7 @@ const resolvers = {
   Mutation: {
     createAction: async (parent, { data }, context, info) => {
       const { code, authSignature, jsParams, when, eventType } = data;
+      const actionId = uuidv4();
       if (eventType === 'BLOCK') {
         // blockNumber is required
         const { blockNumber } = when;
@@ -98,14 +100,14 @@ const resolvers = {
           throw new Error('contractAddress, contractABI, contractEventName are required for contract event');
         }
       } else if (eventType === 'WEBHOOK') {
-        // webhookUrl is required
-        const { webhookUrl } = when;
-        if (!webhookUrl) {
-          throw new Error('webhookUrl is required for webhook event');
-        }
+        // prepare webhookcUrl
+        const webhookCurl = `curl -X POST -H "Content-Type: application/json" http://localhost:3000/api/webhook/trigger -d '{ "actionId": "${actionId}", "account":"${authSignature.address}", "payload":"{}" }'`;
+        console.log('webhookCurl', webhookCurl);
+        when.webhookCurl = webhookCurl;
       }
       const action = await prisma.action.create({
         data: {
+          id: actionId,
           ...data
         }
       });
