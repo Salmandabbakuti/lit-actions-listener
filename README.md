@@ -70,6 +70,10 @@ yarn prima db push
 yarn dev
 ```
 
+#### Demo
+
+![Screenshot1](https://gitlab.com/salmandabbakuti/lit-actions/-/blob/main/screenshot.png)
+
 ### Safety
 
 This is experimental software and should evolve over time. It is not recommended to use this in production.
