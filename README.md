@@ -1,10 +1,6 @@
 ## Lit Actions Event Listener
 
-**This is a work in progress. Whole functionality is not ready yet. There may be many bugs and missing features.**
-
-**Just a proof of concept to show how it could work.**
-
-**To Reviewer: it would be great if you could give me some feedback on the code. I'm not sure if I'm doing it right. also would be nice if you could extend deadline to 2 or more weeks.**
+**Note: This is a work in progress. Whole functionality is not ready yet. There may be many bugs and missing features.**
 
 #### What are Lit Actions?
 
@@ -24,23 +20,16 @@ As of now, Lit Actions are being triggered by a user. The idea is to remove this
 
 #### Workflow
 
-1. Register a lit action with details of the action and event you want to listen for.
+1. Registering a lit action with details of the action and event you want to listen for. When a user registers a Lit Action, they provide the following details:
 
-When a user registers a Lit Action, they provide the following details:
+- action name (e.g. "my webhook action")
+- action code
+- js parameters (optional)
+- event type (block, webhook, contract)
+- chainId/name that event to be emitted
+- event details (e.g. block number, contract address, contract event name etc.)
 
-a. action name (e.g. "weather webhook action")
-
-b. action code
-
-c. js parameters (optional)
-
-d. event type (block, webhook, contract)
-
-e. event details (e.g. block number, contract address, etc.)
-
-There wil be some validations on the action code and event details before storing the action. if they are valid, the action is stored in the database. you can find relavent code here `pages/api/graphql.js`
-
-These details are stored in database and used to trigger the action when the event occurs.
+There wil be some validations on the action code and event details before storing the action. if they are valid, the action is stored in the database. you can find relavent code here `pages/api/graphql.js`. These details are stored in database and used to trigger the action when the event occurs.
 
 **Note: User auth will also be added to this. So that logged in users can see/update/delete all their actions in place.**
 **Currently, chainId is not being specified by user(defaults to mainnet for now). It will be used in future to support multiple chains.**
