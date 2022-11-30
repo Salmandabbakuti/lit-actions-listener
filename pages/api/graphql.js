@@ -1,7 +1,7 @@
 import { createSchema, createYoga } from 'graphql-yoga';
 import { Web3Provider, JsonRpcProvider } from "@ethersproject/providers";
 import { Contract } from "@ethersproject/contracts";
-import { LitNodeClient } from '@lit-protocol/sdk-browser';
+import LitJsSdk from "lit-js-sdk/build/index.node.js";
 import { v4 as uuidv4 } from 'uuid';
 import prisma from "../../prisma";
 
@@ -22,24 +22,24 @@ provider.on("block", async (blockNumber) => {
     }
   });
   console.log("actions", actions);
-  // if (actions.length > 0) {
-  //   for (const action of actions) {
-  //     // call lit actions here
-  //     const { code, authSignature, jsParams, eventType } = action;
-  //     const litNodeClient = new LitNodeClient({
-  //       provider,
-  //       authSignature,
-  //     });
-  //     await litNodeClient.connect();
-  //     const results = await litNodeClient.executeJs({
-  //       code,
-  //       authSig: authSignature,
-  //       jsParams
-  //     });
-  //     console.log('action run successfully:', results);
-  //   }
-  // }
-  // if()
+  if (actions.length > 0) {
+    for (const action of actions) {
+      // call lit actions here
+      const { code, authSignature, jsParams, eventType } = action;
+      const litNodeClient = new LitJsSdk.LitNodeClient({
+        alertWhenUnauthorized: false,
+        litNetwork: "serrano",
+        debug: true,
+      });
+      await litNodeClient.connect();
+      const results = await litNodeClient.executeJs({
+        code,
+        authSig: authSignature,
+        jsParams
+      });
+      console.log('action run successfully:', action, results);
+    }
+  }
 });
 
 const typeDefs = /* GraphQL */`
