@@ -1,34 +1,84 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Lit Actions Event Listener
 
-## Getting Started
+**This is a work in progress. Whole functionality is not ready yet. There may be many bugs and missing features.**
 
-First, run the development server:
+**Just a proof of concept to show how it could work.**
+
+**To Reviewer: it would be great if you could give me some feedback on the code. I'm not sure if I'm doing it right. also would be nice if you could extend deadline to 2 or more weeks.**
+
+#### What are Lit Actions?
+
+Lit Actions are JavaScript functions that can use the threshold cryptography that powers the Lit network. They are basically JavaScript smart contracts, only much more powerful.
+
+#### Why Lit Actions Event Listener?
+
+As of now, Lit Actions are being triggered by a user. The idea is to remove this reliance on user interactions and instead introduce event-based automation. This is where Lit Actions Event Listener comes in. It listens for on/off-chain events and triggers registered Lit Actions when they occur.
+
+#### Proposed on/off chain events for Lit Actions:
+
+1. Block Event - Triggered when a specified block is mined.
+2. Webhook Event - (on HTTP webhook trigger)
+3. Contract Event - Coming Soon (On smartcontract events)
+4. Transaction Event - Coming Soon (on tranasction mined, on transaction confirmed, on transaction failed, on transaction pending)
+5. Periodic Events - Coming Soon (e.g. every 5 minutes, every 1 hour, etc.)
+
+#### Workflow
+
+1. Register a lit action with details of the action and event you want to listen for.
+
+When a user registers a Lit Action, they provide the following details:
+
+a. action name (e.g. "weather webhook action")
+
+b. action code
+
+c. js parameters (optional)
+
+d. event type (block, webhook, contract)
+
+e. event details (e.g. block number, contract address, etc.)
+
+There wil be some validations on the action code and event details before storing the action. if they are valid, the action is stored in the database. you can find relavent code here `pages/api/graphql.js`
+
+These details are stored in database and used to trigger the action when the event occurs.
+
+**Note: User auth will also be added to this. So that logged in users can see/update/delete all their actions in place.**
+**Currently, chainId is not being specified by user(defaults to mainnet for now). It will be used in future to support multiple chains.**
+
+2. Lit Actions Event Listener listens for the event.
+
+When the Lit Actions Event Listener starts, it fetches all the registered actions from the database(specific to current mined block if block event) and starts listening for the events. When an event occurs, it triggers the action.
+
+if it is a webhook event, it will be triggered when the webhook is called with the actionId and payload as parameters. if action exists in database, it will fetch action details from database, validate the action and trigger the action. you can find relavent code here `pages/api/actions/webhook/trigger.js`
+
+3. When the event occurs, Lit Actions Event Listener triggers the registered action with the details they provide in the action.
+
+#### Getting Started
+
+1. Preparing Database Schema (MongoDB suggested)
+
+> Make sure env variable `DATABASE_URL` is set to your MongoDB URI
 
 ```bash
-npm run dev
-# or
+yarn install
+yarn prima db push
+```
+
+2. Start the app
+
+```bash
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### Demo
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+![Screenshot1](https://gitlab.com/salmandabbakuti/lit-actions/-/blob/main/screenshot.png)
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+### Safety
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+This is experimental software and should evolve over time. It is not recommended to use this in production.
 
-## Learn More
+Lit Actions Listener is a proof of concept and is not ready for production use. It is not audited and has not been tested for security. Use at your own risk.
+I do not give any warranties and will not be liable for any loss incurred through any use of this codebase.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+#### Contributing
