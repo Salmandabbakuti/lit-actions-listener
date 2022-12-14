@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import LitJsSdk from "@lit-protocol/lit-node-client";
+import litAuth from "@lit-protocol/auth-browser";
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
@@ -15,18 +15,18 @@ export default function Home() {
     // prompt signing
     if (!["name", "jsParams", "code", "eventType", "when"].every((key) => actionInputData[key])) return alert("Please fill in all fields!");
     try {
+      setLogMessage("");
+      setLoading(true);
       const { jsParams, eventType, when } = actionInputData;
-
       const jsParamsObj = JSON.parse(jsParams);
       const whenObj = JSON.parse(when);
 
-      const authSignature = await LitJsSdk.checkAndSignAuthMessage({ chain: "mumbai" });
+      const authSignature = await litAuth.checkAndSignAuthMessage({ chain: "mumbai" });
       // if (!authSignature) {
       //   authSignature = await LitJsSdk.checkAndSignAuthMessage({ chain: "mumbai" });
       //   console.log("authSignature", authSignature);
       //   return;
       // }
-      setLoading(true);
       const response = await fetch('/api/graphql', {
         method: 'POST',
         headers: {
@@ -52,9 +52,11 @@ export default function Home() {
       const { data } = await response.json();
       console.log(data);
       setLoading(false);
+      setLogMessage("Action registered successfully!");
     } catch (err) {
       setLoading(false);
       console.log("error registering action", err);
+      setLogMessage(`Error registering action: ${err.message}`);
     }
   };
   return (
@@ -67,7 +69,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Lit Actions!</a>
+          Welcome to <a href="https://litprotocol.com/">Lit Actions!</a>
         </h1>
         {/* lit actions container */}
         <div className={styles.createActionContainer}>
@@ -121,22 +123,21 @@ export default function Home() {
             rows={5}
             cols={5}
           />
-          <button className={styles.button} onClick={handleRegisterAction}>Register Action</button>
+          <button className={styles.button} onClick={handleRegisterAction} disabled={loading}>Register Action</button>
         </div>
+        {loading && <p>Loading...</p>}
+        <p>{logMessage}</p>
       </main>
 
       <footer className={styles.footer}>
         <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+          href="https://github.com/Salmandabbakuti"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
+          © 2022 Salman Dabbakuti. Built For Lit Protocol
         </a>
       </footer>
     </div>
   );
-};
+};;
