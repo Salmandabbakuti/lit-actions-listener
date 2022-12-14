@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import LitJsSdk from "@lit-protocol/sdk-browser";
+import LitJsSdk from "@lit-protocol/lit-node-client";
 import styles from '../styles/Home.module.css';
 
 export default function Home() {

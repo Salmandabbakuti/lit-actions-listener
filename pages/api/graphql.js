@@ -1,7 +1,7 @@
 import { createSchema, createYoga } from 'graphql-yoga';
 import { Web3Provider, JsonRpcProvider } from "@ethersproject/providers";
 import { Contract } from "@ethersproject/contracts";
-import LitJsSdk from "@lit-protocol/sdk-nodejs";
+import { LitNodeClient } from "@lit-protocol/lit-node-client";
 import { v4 as uuidv4 } from 'uuid';
 import prisma from "../../prisma";
 
@@ -26,7 +26,7 @@ provider.on("block", async (blockNumber) => {
     for (const action of actions) {
       // call lit actions here
       const { code, authSignature, jsParams, eventType } = action;
-      const litNodeClient = new LitJsSdk.LitNodeClient({
+      const litNodeClient = new LitNodeClient({
         alertWhenUnauthorized: false,
         litNetwork: "serrano",
         debug: true,
