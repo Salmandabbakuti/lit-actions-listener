@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["extendedWhereUnique"]
 }
 
 datasource db {
@@ -8,7 +9,7 @@ datasource db {
 }
 
 model Action {
-  id             String   @id @map("_id") @db.ObjectId
+  actionId       String   @id @default(uuid()) @map("_id")
   name           String
   code           String
   jsParams       Json
@@ -21,6 +22,6 @@ model Action {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  @@index([id, name, createdBy])
+  @@index([actionId, name, createdBy])
   @@map("actions")
 }

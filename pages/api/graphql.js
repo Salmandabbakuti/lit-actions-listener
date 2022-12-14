@@ -1,7 +1,7 @@
 import { createSchema, createYoga } from 'graphql-yoga';
 import { Web3Provider, JsonRpcProvider } from "@ethersproject/providers";
 import { Contract } from "@ethersproject/contracts";
-import LitJsSdk from "lit-js-sdk/build/index.node.js";
+import LitJsSdk from "@lit-protocol/sdk-nodejs";
 import { v4 as uuidv4 } from 'uuid';
 import prisma from "../../prisma";
 
@@ -101,13 +101,14 @@ const resolvers = {
         }
       } else if (eventType === 'WEBHOOK') {
         // prepare webhookcUrl
-        const webhookCurl = `curl -X POST -H "Content-Type: application/json" http://localhost:3000/api/webhook/trigger -d '{ "actionId": "${actionId}", "account":"${authSignature.address}", "payload":"{}" }'`;
+        const webhookCurl = `curl -X POST http://localhost:3000/api/actions/webhook/trigger -H "Content-Type: application/json" -d '{ "actionId": "${actionId}", "account":"${authSignature.address}", "payload":"{}" }'`;
+        //  curl with escape body characters
         console.log('webhookCurl', webhookCurl);
         when.webhookCurl = webhookCurl;
       }
       const action = await prisma.action.create({
         data: {
-          id: actionId,
+          actionId,
           ...data
         }
       });

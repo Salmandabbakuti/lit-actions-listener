@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-import LitJsSdk from "lit-js-sdk/build/index.node.js";
+import LitJsSdk from "@lit-protocol/sdk-nodejs";
 import prisma from "../../../../prisma";
 
 export default async function handler(req, res) {
@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     if (!actionId || !payload || !account) return res.status(400).json({ message: "Missing required fields: actionId, account, payload" });
     const action = await prisma.action.findUnique({
       where: {
-        id: actionId,
+        actionId,
         createdBy: account
       }
     });
