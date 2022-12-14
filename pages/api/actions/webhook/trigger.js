@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-import LitJsSdk from "@lit-protocol/lit-node-client";
+import { LitNodeClient } from "@lit-protocol/lit-node-client";
 import prisma from "../../../../prisma";
 
 export default async function handler(req, res) {
@@ -17,7 +17,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: 'Action not found with given Id!' });
     }
     const { code, authSignature, jsParams } = action;
-    const litNodeClient = new LitJsSdk.LitNodeClient({
+    const litNodeClient = new LitNodeClient({
       alertWhenUnauthorized: false,
       litNetwork: "serrano",
       debug: true,

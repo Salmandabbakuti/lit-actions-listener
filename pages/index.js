@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import litAuth from "@lit-protocol/auth-browser";
+import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
@@ -21,7 +21,7 @@ export default function Home() {
       const jsParamsObj = JSON.parse(jsParams);
       const whenObj = JSON.parse(when);
 
-      const authSignature = await litAuth.checkAndSignAuthMessage({ chain: "mumbai" });
+      const authSignature = await LitJsSdk.checkAndSignAuthMessage({ chain: "mumbai" });
       // if (!authSignature) {
       //   authSignature = await LitJsSdk.checkAndSignAuthMessage({ chain: "mumbai" });
       //   console.log("authSignature", authSignature);
